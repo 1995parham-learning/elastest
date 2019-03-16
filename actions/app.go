@@ -12,7 +12,7 @@ func App() *echo.Echo {
 	app := echo.New()
 	app.Use(middleware.Logger())
 
-	app.Use(echo.MiddlewareFunc(apmecho.Middleware()))
+	app.Use(apmecho.Middleware())
 
 	// Validator
 	app.Validator = &DefaultValidator{validator.New()}
