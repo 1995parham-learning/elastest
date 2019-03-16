@@ -1,4 +1,4 @@
-FROM golang:1.12.1 as builder
+FROM golang:1.12.0 AS builder
 
 # Modify these variables depending on your application:
 # * `TZ` Timezone for the app.
