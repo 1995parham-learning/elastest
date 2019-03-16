@@ -1,4 +1,4 @@
-FROM golang:1.12 as builder
+FROM golang:1.12.1 as builder
 
 # Modify these variables depending on your application:
 # * `TZ` Timezone for the app.
@@ -10,8 +10,6 @@ FROM golang:1.12 as builder
 ENV TZ=Asia/Tehran \
     GO_SOURCE_PATH=/app/src/gitlab.snapp.ir/golangify/elastest \
     GO_BINARY="elastest" \
-    GOPATH=/app \
-    GOBIN=/app/bin \
     GO111MODULE=on
 
 # Handles goproxy in build arguments
@@ -24,25 +22,21 @@ RUN apt-get update && \
     apt-get install -y \
       git \
       ca-certificates
-RUN cp --remove-destination /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo "${TZ}" > /etc/timezone && \
-    # Clean up the package cache. This reduces the size of the Docker image.
-    rm -rf /var/cache/apk/*
 
 # Set the current directory for the Docker image to the Go source path, since
 # we initially want to build the Go app.
 WORKDIR $GO_SOURCE_PATH
-# Copy the application files.
 
+# Copy the application files.
 COPY . .
 
 # Install the packages required for building the Go application.
 RUN go mod download
 
 # Build the application binary, if you have additional binaries add them below.
-RUN CGO_ENABLED=0 GOOS=linux  go build -o $GO_BINARY .
+RUN CGO_ENABLED=0 GOOS=linux go build -o $GO_BINARY .
 
-FROM alpine:latest
+FROM alpine:3.9
 
 ENV TZ=Asia/Tehran \
     GO_SOURCE_PATH=/app/src/gitlab.snapp.ir/golangify/elastest \
@@ -52,8 +46,18 @@ ENV TZ=Asia/Tehran \
 
 WORKDIR $GOBIN
 
-RUN apk --no-cache add ca-certificates
 COPY --from=builder $GO_SOURCE_PATH .
+
+RUN apk add --update --no-cache \
+      tzdata \
+      ca-certificates \
+      bash \
+    && \
+    cp --remove-destination /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" > /etc/timezone && \
+    mkdir -p /var/log && \
+    chgrp -R 0 /var/log && \
+    chmod -R g=u /var/log
 
 # Specify the command to run when the container starts.
 CMD ["${GOBIN}/${GO_BINARY}"]

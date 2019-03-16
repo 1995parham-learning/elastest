@@ -4,16 +4,20 @@ stages:
   - build-dev
   - deploy-dev
 
+variables:
+  # go proxy
+  HTTP_PROXY: 'http://172.16.77.198:8118'
+  HTTPS_PROXY: 'http://172.16.77.198:8118'
+  NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
+  GOPROXY: http://172.16.77.197:3000
+
+  # go build configuration
+  GOOS: 'linux'
+  GOARCH: 'amd64'
+
 lint:
   image: registry.snapp.tech/golangify/docker-golang-ci:1.12
   stage: lint
-  variables:
-    HTTP_PROXY: 'http://172.16.77.198:8118'
-    HTTPS_PROXY: 'http://172.16.77.198:8118'
-    NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
-    GOPROXY: http://172.16.77.197:3000
-    GOOS: 'linux'
-    GOARCH: 'amd64'
   script:
     - make fast-lint
   only:
@@ -22,16 +26,6 @@ lint:
 test:
   image: registry.snapp.tech/golangify/docker-golang-ci:1.12
   stage: test
-  variables:
-    HTTP_PROXY: 'http://172.16.77.198:8118'
-    HTTPS_PROXY: 'http://172.16.77.198:8118'
-    NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
-    GOPROXY: http://172.16.77.197:3000
-    GOOS: 'linux'
-    GOARCH: 'amd64'
-    BUILD_PATH: '.'
-    QUERY_TILE38_ADDR: tile38:9851
-    PIPELINE_TILE38_ADDR: tile38:9851
   script:
     - make ci-test
   coverage: '/^total:\t+\(statements\)\t+(\d+\.\d+)%/'
@@ -47,10 +41,10 @@ build_app_image:
     - >
       docker build \
         --file .docker/Dockerfile \
-        --tag ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID} \
         --build-arg HTTP_PROXY \
         --build-arg HTTPS_PROXY \
         --build-arg GOPROXY \
+        --tag ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID} \
         ./
     - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID}
   only:
