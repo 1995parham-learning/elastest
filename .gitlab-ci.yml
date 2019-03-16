@@ -37,6 +37,19 @@ test:
   only:
     - branches
 
+build_app_image:
+  image: docker:stable
+  stage: build-dev
+  before_script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+  script:
+    - docker build -f .docker/Dockerfile -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID} .
+    - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID}
+  only:
+    - branches
+  except:
+    - master
+
 deploy_to_dev1:
   stage: deploy-dev
   variables:
