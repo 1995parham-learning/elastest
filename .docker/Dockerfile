@@ -23,7 +23,7 @@ ENV GOPROXY ${GOPROXY}
 RUN apt-get update && \
     apt-get install -y \
       git \
-      ca-certificates \
+      ca-certificates
 RUN cp --remove-destination /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo "${TZ}" > /etc/timezone && \
     # Clean up the package cache. This reduces the size of the Docker image.
