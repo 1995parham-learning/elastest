@@ -1,6 +1,7 @@
 stages:
   - lint
   - test
+  - deploy-dev
 
 lint:
   image: registry.snapp.tech/golangify/docker-golang-ci:1.12
@@ -17,9 +18,6 @@ lint:
     - make fast-lint
   only:
     - branches
-  except:
-    - dev
-    - master
 
 test:
   image: registry.snapp.tech/golangify/docker-golang-ci:1.12
@@ -37,10 +35,33 @@ test:
   script:
     - make ci-test
   coverage: '/^total:\t+\(statements\)\t+(\d+\.\d+)%/'
-  services:
-    - name: tile38/tile38
-      alias: tile38
+  only:
+    - branches
+
+deploy_to_dev1:
+  stage: deploy-dev
+  variables:
+    DOCKER_HOST: tcp://swarm.snapp.tech:2376
+    DOCKER_CERT_PATH: DOCKERTLS
+    DOCKER_TLS_VERIFY: 1
+    DEV_ENV: dev1
+  image: docker:stable
+  before_script:
+    - mkdir DOCKERTLS
+    - echo "$TLSCACERT" > DOCKERTLS/ca.pem
+    - echo "$TLSCERT" > DOCKERTLS/cert.pem
+    - echo "$TLSKEY" > DOCKERTLS/key.pem
+
+  script:
+    - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
+    - docker stack deploy --with-registry-auth --compose-file=.docker/docker-compose.yml ${DEV_ENV}-${CI_PROJECT_NAME}
+    - sleep 30
+    - docker stack services ${DEV_ENV}-${CI_PROJECT_NAME}
+  environment:
+    name: ${DEV_ENV}-url
+    url: https://base-api.${DEV_ENV}.snapp.tech
   only:
     - branches
   except:
-    - dev
+    - master
+  when: manual
