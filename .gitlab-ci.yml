@@ -47,8 +47,6 @@ build_app_image:
     - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID}
   only:
     - branches
-  except:
-    - master
 
 deploy_to_dev1:
   stage: deploy-dev
@@ -74,6 +72,4 @@ deploy_to_dev1:
     url: https://base-api.${DEV_ENV}.snapp.tech
   only:
     - branches
-  except:
-    - master
   when: manual
