@@ -45,11 +45,13 @@ build_app_image:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
   script:
     - >
-      docker build -f .docker/Dockerfile -t ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID} \
-      --build-arg HTTP_PROXY \
-      --build-arg HTTPS_PROXY \
-      --build-arg GOPROXY \
-      .
+      docker build \
+        --file .docker/Dockerfile \
+        --tag ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID} \
+        --build-arg HTTP_PROXY \
+        --build-arg HTTPS_PROXY \
+        --build-arg GOPROXY \
+        ./
     - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID}
   only:
     - branches
