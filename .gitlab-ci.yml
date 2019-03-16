@@ -5,9 +5,12 @@ stages:
   - deploy-dev
 
 variables:
+  # docker registery
+  REGISTRY_MIRROR: "https://mirror.snappcloud.io"
+
   # go proxy
-  HTTP_PROXY: 'http://172.16.77.198:8118'
-  HTTPS_PROXY: 'http://172.16.77.198:8118'
+  HTTP_PROXY: http://172.16.77.198:8118
+  HTTPS_PROXY: http://172.16.77.198:8118
   NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
   GOPROXY: http://172.16.77.197:3000
 
@@ -33,8 +36,11 @@ test:
     - branches
 
 build_app_image:
-  image: docker:stable
   stage: build-dev
+  image: docker:git
+  services:
+    - name: docker:dind
+      command: ["--registry-mirror=$REGISTRY_MIRROR"]
   before_script:
     - docker login -u gitlab-ci-token -p ${CI_BUILD_TOKEN} ${CI_REGISTRY}
   script:
