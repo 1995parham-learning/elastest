@@ -15,11 +15,6 @@ ENV GO_SOURCE_PATH=/app/src/gitlab.snapp.ir/golangify/elastest \
 ARG GOPROXY
 ENV GOPROXY ${GOPROXY}
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y \
-      git \
-      ca-certificates
-
 # Set the current directory for the Docker image to the Go source path, since
 # we initially want to build the Go app.
 WORKDIR $GO_SOURCE_PATH
@@ -28,8 +23,6 @@ WORKDIR $GO_SOURCE_PATH
 COPY . .
 
 # Install the packages required for building the Go application.
-RUN go mod download
-
 # Build the application binary, if you have additional binaries add them below.
 RUN CGO_ENABLED=0 GOOS=linux go build -o $GO_BINARY .
 
