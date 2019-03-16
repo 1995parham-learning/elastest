@@ -20,6 +20,10 @@ ENV GOPROXY ${GOPROXY}
 
 # Install the base required packages for the image. Find any additional packages
 # from [the Alpine package explorer](https://pkgs.alpinelinux.org/packages).
+RUN apt-get update && \
+    apt-get install -y \
+      git \
+      ca-certificates \
 RUN cp --remove-destination /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo "${TZ}" > /etc/timezone && \
     # Clean up the package cache. This reduces the size of the Docker image.
@@ -33,9 +37,10 @@ WORKDIR $GO_SOURCE_PATH
 COPY . .
 
 # Install the packages required for building the Go application.
-RUN go mod download && \
-    # Build the application binary, if you have additional binaries add them below.
-    CGO_ENABLED=0 GOOS=linux  go build  -a -installsuffix cgo -o $GO_BINARY .
+RUN go mod download
+
+# Build the application binary, if you have additional binaries add them below.
+RUN CGO_ENABLED=0 GOOS=linux  go build -o $GO_BINARY .
 
 FROM alpine:latest
 
