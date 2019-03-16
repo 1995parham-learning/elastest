@@ -1,0 +1,46 @@
+stages:
+  - lint
+  - test
+
+lint:
+  image: registry.snapp.tech/golangify/docker-golang-ci:1.12
+  stage: lint
+  variables:
+    HTTP_PROXY: 'http://172.16.77.198:8118'
+    HTTPS_PROXY: 'http://172.16.77.198:8118'
+    NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
+    GOPROXY: http://172.16.77.197:3000
+    GOOS: 'linux'
+    GOARCH: 'amd64'
+  script:
+    - go mod download
+    - make fast-lint
+  only:
+    - branches
+  except:
+    - dev
+    - master
+
+test:
+  image: registry.snapp.tech/golangify/docker-golang-ci:1.12
+  stage: test
+  variables:
+    HTTP_PROXY: 'http://172.16.77.198:8118'
+    HTTPS_PROXY: 'http://172.16.77.198:8118'
+    NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
+    GOPROXY: http://172.16.77.197:3000
+    GOOS: 'linux'
+    GOARCH: 'amd64'
+    BUILD_PATH: '.'
+    QUERY_TILE38_ADDR: tile38:9851
+    PIPELINE_TILE38_ADDR: tile38:9851
+  script:
+    - make ci-test
+  coverage: '/^total:\t+\(statements\)\t+(\d+\.\d+)%/'
+  services:
+    - name: tile38/tile38
+      alias: tile38
+  only:
+    - branches
+  except:
+    - dev
