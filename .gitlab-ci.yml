@@ -14,7 +14,6 @@ lint:
     GOOS: 'linux'
     GOARCH: 'amd64'
   script:
-    - go mod download
     - make fast-lint
   only:
     - branches
