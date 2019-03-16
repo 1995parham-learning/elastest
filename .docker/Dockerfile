@@ -12,6 +12,7 @@ ENV TZ=Asia/Tehran \
     GO_BINARY="elastest" \
     GOPATH=/app \
     GOBIN=/app/bin \
+    GOPROXY:="http://172.16.77.197:3000" \
     GO111MODULE=on
 
 # Install the base required packages for the image. Find any additional packages
