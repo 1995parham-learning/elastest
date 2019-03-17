@@ -13,6 +13,7 @@ variables:
   HTTPS_PROXY: http://172.16.77.198:8118
   NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
   GOPROXY: http://172.16.77.197:3000
+  PROXY: "http://default:UKDxQ2MXU38Q3JYwP4AfAMy8Ajn6Ze8H@mirror.snappcloud.io:30128"
 
   # go build configuration
   GOOS: 'linux'
@@ -47,9 +48,8 @@ build_app_image:
     - >
       docker build \
         --file .docker/Dockerfile \
-        --build-arg HTTP_PROXY \
-        --build-arg HTTPS_PROXY \
-        --build-arg GOPROXY \
+        --build-arg http_proxy=$PROXY \
+        --build-arg https_proxy=$PROXY \
         --tag ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID} \
         ./
     - docker push ${CI_REGISTRY}/${CI_PROJECT_PATH}:${CI_PIPELINE_ID}
