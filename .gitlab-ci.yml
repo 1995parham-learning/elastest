@@ -11,7 +11,7 @@ variables:
   # go proxy
   HTTP_PROXY: http://172.16.77.198:8118
   HTTPS_PROXY: http://172.16.77.198:8118
-  NO_PROXY: '172.16.77.197, gitlab.snapp.ir'
+  NO_PROXY: '172.16.77.197, gitlab.snapp.ir, swarm.snapp.tech'
   GOPROXY: http://172.16.77.197:3000
   PROXY: "http://default:UKDxQ2MXU38Q3JYwP4AfAMy8Ajn6Ze8H@mirror.snappcloud.io:30128"
 
