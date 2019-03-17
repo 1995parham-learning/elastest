@@ -76,8 +76,8 @@ deploy_to_dev1:
     - sleep 30
     - docker stack services ${DEV_ENV}-${CI_PROJECT_NAME}
   environment:
-    name: ${DEV_ENV}-url
-    url: https://base-api.${DEV_ENV}.snapp.tech
+    name: swarm/${DEV_ENV}
+    url: https://elastest.${DEV_ENV}.snapp.tech
   only:
     - branches
   when: manual
