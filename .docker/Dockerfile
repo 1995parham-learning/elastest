@@ -30,8 +30,6 @@ FROM alpine:3.9
 
 ENV TZ=Asia/Tehran \
     GO_SOURCE_PATH=/app/src/gitlab.snapp.ir/golangify/elastest \
-    GO_BINARY="elastest" \
-    GOPATH=/app \
     GOBIN=/app/bin
 
 WORKDIR $GOBIN
@@ -50,7 +48,7 @@ RUN apk add --update --no-cache \
     chmod -R g=u /var/log
 
 # Specify the command to run when the container starts.
-CMD ["${GOBIN}/${GO_BINARY}"]
+CMD ["./elastest"]
 
 # Expose any port your application listens on. You must use ports higher than 1024.
 EXPOSE 8080
