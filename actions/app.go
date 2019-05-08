@@ -1,9 +1,9 @@
 package actions
 
 import (
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
-	"go.elastic.co/apm/module/apmecho"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"go.elastic.co/apm/module/apmechov4"
 	"gopkg.in/go-playground/validator.v9"
 )
 
@@ -12,7 +12,7 @@ func App() *echo.Echo {
 	app := echo.New()
 	app.Use(middleware.Logger())
 
-	app.Use(apmecho.Middleware())
+	app.Use(apmechov4.Middleware())
 
 	// Validator
 	app.Validator = &DefaultValidator{validator.New()}
