@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,11 +12,11 @@ import (
 )
 
 func main() {
-	fmt.Println("18.20 at Sep 07 2016 7:20 IR721")
+	log.Println("18.20 at Sep 07 2016 7:20 IR721")
 
-	e := actions.App()
+	app := actions.App()
 	go func() {
-		if err := e.Start(":8080"); err != http.ErrServerClosed {
+		if err := app.Start(":8080"); err != http.ErrServerClosed {
 			log.Fatalf("API Service failed with %s", err)
 		}
 	}()
@@ -26,11 +25,11 @@ func main() {
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 
-	fmt.Println("18.20 As always ... left me alone")
+	log.Println("18.20 As always ... left me alone")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := e.Shutdown(ctx); err != nil {
+	if err := app.Shutdown(ctx); err != nil {
 		log.Printf("API Service failed on exit: %s", err)
 	}
 }
