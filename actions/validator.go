@@ -1,6 +1,8 @@
 package actions
 
 import (
+	"fmt"
+
 	"gopkg.in/go-playground/validator.v9"
 )
 
@@ -11,5 +13,5 @@ type DefaultValidator struct {
 
 // Validate validates structs based on go-playground validator.
 func (cv *DefaultValidator) Validate(i interface{}) error {
-	return cv.validator.Struct(i)
+	return fmt.Errorf("struct validation failed %w", cv.validator.Struct(i))
 }

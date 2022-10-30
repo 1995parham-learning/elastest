@@ -7,6 +7,7 @@ import (
 )
 
 // HelloHandler sends hello to you!
+// nolint: wrapcheck
 func HelloHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Hello")
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -19,7 +20,7 @@ func main() {
 	app := actions.App()
 
 	go func() {
-		if err := app.Start(":8080"); err != http.ErrServerClosed {
+		if err := app.Start(":8080"); errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("API Service failed with %s", err)
 		}
 	}()
