@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/labstack/echo/v4 v4.9.1
-	go.elastic.co/apm/module/apmechov4 v1.15.0
+	go.elastic.co/apm/module/apmechov4/v2 v2.1.0
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )
 
@@ -27,11 +27,10 @@ require (
 	github.com/santhosh-tekuri/jsonschema v1.2.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	go.elastic.co/apm v1.15.0 // indirect
-	go.elastic.co/apm/module/apmhttp v1.15.0 // indirect
+	go.elastic.co/apm/module/apmhttp/v2 v2.1.0 // indirect
+	go.elastic.co/apm/v2 v2.1.0 // indirect
 	go.elastic.co/fastjson v1.1.0 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
-	golang.org/x/lint v0.0.0-20210508222113-6edffad5e616 // indirect
 	golang.org/x/mod v0.6.0 // indirect
 	golang.org/x/net v0.1.0 // indirect
 	golang.org/x/sys v0.1.0 // indirect

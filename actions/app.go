@@ -3,7 +3,7 @@ package actions
 import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"go.elastic.co/apm/module/apmechov4"
+	"go.elastic.co/apm/module/apmechov4/v2"
 	"gopkg.in/go-playground/validator.v9"
 )
 
